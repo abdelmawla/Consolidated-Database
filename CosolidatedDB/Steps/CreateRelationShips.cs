@@ -13,7 +13,7 @@ namespace CosolidatedDB.Steps
 {
     public class CreateRelationShips : BaseStep
     {
-        public CreateRelationShips(bool runOnce, int stepOrder, StepType type = StepType.First) : base(runOnce, stepOrder, type) { }
+        public CreateRelationShips(bool runOnce, int stepOrder, StepType type, Stream sourceStream) : base(runOnce, stepOrder, type, sourceStream) { }
 
         public override void Execute(SqlConnection dbConnection, string destDBName)
         {
@@ -22,15 +22,18 @@ namespace CosolidatedDB.Steps
             base.Execute(dbConnection, destDBName);
 
             if (dbConnection.State == ConnectionState.Closed) dbConnection.Open();
+            
+            string currentDirectory = Directory.GetCurrentDirectory();
 
-            using (Stream stream = Assembly.GetExecutingAssembly().
-                GetManifestResourceStream("CosolidatedDB.Scripts.Relations.txt"))
+            if (SourceStream == null) SourceStream = File.OpenRead(currentDirectory + "Scripts\\Relations.txt");
+
+            using (SourceStream)
             {
-                if (stream == null) throw new Exception(Resources.FileNotFound);
+                if (SourceStream == null) throw new Exception(Resources.FileNotFound);
 
                 dbConnection.ChangeDatabase(destDBName);
 
-                foreach (string commandText in FileHelper.LoadItemsLines(new StreamReader(stream)))
+                foreach (string commandText in FileHelper.LoadItemsLines(new StreamReader(SourceStream)))
                 {
                     try
                     {

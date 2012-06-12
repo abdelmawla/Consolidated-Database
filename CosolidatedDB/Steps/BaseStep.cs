@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -18,16 +19,19 @@ namespace CosolidatedDB.Steps
 
         public bool CanNotExecute { get { return RunOnce && RunBefore; }}
 
-        protected BaseStep(bool runOnce, int stepOrder, StepType type)
+        protected Stream SourceStream { get; set; }
+
+        protected BaseStep(bool runOnce, int stepOrder, StepType type, Stream sourceStream = null)
         {
             RunOnce = runOnce;
             StepOrder = stepOrder;
             Type = type;
+            SourceStream = sourceStream;
         }
 
         public bool RunOnce { get; set; }
 
-        public virtual void Execute(SqlConnection dbConnection, string destDBName)
+        public virtual void Execute(SqlConnection dbConnection, string destDBName) 
         {
             RunBefore = true;
         }

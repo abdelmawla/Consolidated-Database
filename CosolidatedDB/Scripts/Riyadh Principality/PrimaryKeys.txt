@@ -1,0 +1,17 @@
+﻿alter table  [NewDataBase].dbo.[PrnArchChannelFile] alter column GovernorateID varchar(50) not null
+alter table  [NewDataBase].dbo.[PrnArchConfidenialFile] alter column GovernorateID varchar(50) not null
+alter table  [NewDataBase].dbo.[PrnArchCounteriesFile] alter column GovernorateID varchar(50) not null
+alter table  [NewDataBase].dbo.[PrnArchEventFile] alter column GovernorateID varchar(50) not null
+alter table  [NewDataBase].dbo.[PrnArchGovernmentalSitesFile] alter column GovernorateID varchar(50) not null
+alter table  [NewDataBase].dbo.[PrnArchKingAbdulazizDaraFile] alter column GovernorateID varchar(50) not null
+alter table  [NewDataBase].dbo.[PrnArchLetterFile] alter column GovernorateID varchar(50) not null
+alter table  [NewDataBase].dbo.[PrnArchNationalSecurityFile] alter column GovernorateID varchar(50) not null
+alter table  [NewDataBase].dbo.[PrnArchNattionalNegotiationsFile] alter column GovernorateID varchar(50) not null
+alter table  [NewDataBase].dbo.[PrnArchOfficeFile] alter column GovernorateID varchar(50) not null
+alter table  [NewDataBase].dbo.[PrnArchPrivateConfidenialFile] alter column GovernorateID varchar(50) not null
+alter table  [NewDataBase].dbo.[PrnArchPrivateFile] alter column GovernorateID varchar(50) not null
+alter table  [NewDataBase].dbo.[PrnArchSader] alter column GovernorateID varchar(50) not null
+alter table  [NewDataBase].dbo.[PrnArchTameemFile] alter column GovernorateID varchar(50) not null
+alter table  [NewDataBase].dbo.[PrnArchTribsFile] alter column GovernorateID varchar(50) not null
+alter table  [NewDataBase].dbo.[PrnArchUniversitiesFile] alter column GovernorateID varchar(50) not null
+alter table  [NewDataBase].dbo.[PrnArchWhatUHaveFile] alter column GovernorateID varchar(50) not null

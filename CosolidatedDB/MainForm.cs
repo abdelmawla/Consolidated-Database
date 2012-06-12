@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -102,7 +103,29 @@ namespace CosolidatedDB
 
         private void LoadExcptionalSteps(string databaseName)
         {
+            Stream sourceStream = null;
 
+            string currentDirectory = Directory.GetCurrentDirectory();
+
+            string databaseDirectory = string.Format("{0}\\Scripts\\{1}", currentDirectory, databaseName);
+
+            if (!Directory.Exists(databaseDirectory)) return;
+
+            string tablesScriptFilePath = string.Format("{0}\\{1}", databaseDirectory, "Tables.txt");
+
+            if (File.Exists(tablesScriptFilePath))
+            {
+                Stream tablesFileStream =  File.OpenRead(tablesScriptFilePath);
+                _executionSteps.Add(new CreateTables(true, 2, StepType.Second, tablesFileStream ));
+            }
+
+            string primaryKeysScriptFilePath = string.Format("{0}\\{1}", databaseDirectory, "PrimaryKeys.txt");
+
+            if (File.Exists(primaryKeysScriptFilePath))
+            {
+                Stream primarykeysFileStream = File.OpenRead(primaryKeysScriptFilePath);
+                _executionSteps.Add(new CreatePrimaryKeys(true, 3, StepType.Second, primarykeysFileStream));
+            }
         }
 
         private bool IsFormValid()
@@ -138,11 +161,10 @@ namespace CosolidatedDB
 
         private void LoadSteps()
         {
-            _executionSteps.Add(new CreateTables(runOnce: false, stepOrder: 2));
-            _executionSteps.Add(new CreateRelationShips(runOnce: true, stepOrder: 4));
-            _executionSteps.Add(new CreateDestinationDB(runOnce: true, stepOrder: 1));
-            _executionSteps.Add(new CreatePrimaryKeys(runOnce: true, stepOrder: 3));
-            
+            _executionSteps.Add(new CreateTables(runOnce: false, stepOrder: 2, type: StepType.First, sourceStream: null));
+            _executionSteps.Add(new CreateRelationShips(runOnce: true, stepOrder: 4, type: StepType.First, sourceStream: null));
+            _executionSteps.Add(new CreateDestinationDB(runOnce: true, stepOrder: 1, type: StepType.First, sourceStream: null));
+            _executionSteps.Add(new CreatePrimaryKeys(runOnce: true, stepOrder: 3, type: StepType.First, sourceStream: null));
         }
 
         private void LblSelectedFileNameLinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

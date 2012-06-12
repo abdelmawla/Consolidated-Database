@@ -13,22 +13,25 @@ namespace CosolidatedDB.Steps
 {
     public class CreateTables : BaseStep
     {
-        public CreateTables(bool runOnce, int stepOrder, StepType type = StepType.First) : base(runOnce, stepOrder, type) { }
+        public CreateTables(bool runOnce, int stepOrder, StepType type, Stream sourceStream) : base(runOnce, stepOrder, type, sourceStream) { }
 
         public override void Execute(SqlConnection dbConnection, string destDBName)
         {
             if(CanNotExecute) return;
-            
+
             base.Execute(dbConnection, destDBName);
 
             if (dbConnection.State == ConnectionState.Closed) dbConnection.Open();
+            
+            string currentDirectory  =  Directory.GetCurrentDirectory();
 
-            using (Stream stream = Assembly.GetExecutingAssembly().
-                GetManifestResourceStream("CosolidatedDB.Scripts.Tables.txt"))
+            if (SourceStream == null) SourceStream = File.OpenRead(currentDirectory + "Scripts\\Tables.txt");
+
+            using (SourceStream)
             {
-                if (stream == null) throw new Exception(Resources.FileNotFound);
+                if (SourceStream == null) throw new Exception(Resources.FileNotFound);
 
-                foreach (string commandText in FileHelper.LoadItemsLines(new StreamReader(stream)))
+                foreach (string commandText in FileHelper.LoadItemsLines(new StreamReader(SourceStream)))
                 {
                     try
                     {

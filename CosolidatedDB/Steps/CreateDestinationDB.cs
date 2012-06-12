@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Text;
 using CosolidatedDB.Helpers;
@@ -10,7 +11,7 @@ namespace CosolidatedDB.Steps
 {
     public class CreateDestinationDB : BaseStep
     {
-        public CreateDestinationDB(bool runOnce, int stepOrder, StepType type = StepType.First) : base(runOnce, stepOrder, type) { }
+        public CreateDestinationDB(bool runOnce, int stepOrder, StepType type, Stream sourceStream) : base(runOnce, stepOrder, type, sourceStream) { }
 
         public override void Execute(SqlConnection dbConnection, string destDBName)
         {
