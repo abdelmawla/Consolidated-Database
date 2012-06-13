@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 using CosolidatedDB.Helpers;
 using CosolidatedDB.Properties;
 
@@ -25,7 +21,7 @@ namespace CosolidatedDB.Steps
 
             string currentDirectory = Directory.GetCurrentDirectory();
 
-            if (SourceStream == null) SourceStream = File.OpenRead(currentDirectory + "Scripts\\PrimaryKeys.txt");
+            if (SourceStream == null) SourceStream = File.OpenRead(currentDirectory + "\\Scripts\\PrimaryKeys.txt");
 
             using (SourceStream)
             {

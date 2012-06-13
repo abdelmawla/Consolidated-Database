@@ -25,7 +25,7 @@ namespace CosolidatedDB.Steps
             
             string currentDirectory  =  Directory.GetCurrentDirectory();
 
-            if (SourceStream == null) SourceStream = File.OpenRead(currentDirectory + "Scripts\\Tables.txt");
+            if (SourceStream == null) SourceStream = File.OpenRead(currentDirectory + "\\Scripts\\Tables.txt");
 
             using (SourceStream)
             {
