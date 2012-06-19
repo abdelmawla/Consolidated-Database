@@ -159,10 +159,10 @@ namespace CosolidatedDB
 
         private void LoadSteps()
         {
-            _executionSteps.Add(new CreateDestinationDB(runOnce: true, stepOrder: 1, type: StepType.First, sourceStream: null));
             _executionSteps.Add(new CreateTables(runOnce: false, stepOrder: 2, type: StepType.First, sourceStream: null));
-            _executionSteps.Add(new CreatePrimaryKeys(runOnce: true, stepOrder: 3, type: StepType.First, sourceStream: null));
             _executionSteps.Add(new CreateRelationShips(runOnce: true, stepOrder: 4, type: StepType.First, sourceStream: null));
+            _executionSteps.Add(new CreateDestinationDB(runOnce: true, stepOrder: 1, type: StepType.First, sourceStream: null));
+            _executionSteps.Add(new CreatePrimaryKeys(runOnce: true, stepOrder: 3, type: StepType.First, sourceStream: null));
         }
 
         private void LblSelectedFileNameLinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
