@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
@@ -52,7 +53,9 @@ namespace CosolidatedDB
 
             btnStartDataTransfer.Enabled = false;
 
-            foreach (var connectionString in FileHelper.LoadItemsLines(_fileDialog.FileName))
+            var connectionStrings = FileHelper.LoadItemsLines(_fileDialog.FileName);
+
+            foreach (var connectionString in connectionStrings)
             {
                 using (var connection = new SqlConnection(connectionString))
                 {
@@ -61,11 +64,46 @@ namespace CosolidatedDB
                     _executionSteps = new List<BaseStep>(_executionSteps.OrderBy(step => step.StepOrder).ThenBy(step => step.StepOrder));
 
                     foreach (var step in _executionSteps)
-                    {
                         step.Execute(connection, txtNewDatabaseName.Text);
-                    }
                 }
             }
+
+            PartitionDatabase(txtNewDatabaseName.Text, connectionStrings);
+        }
+
+        private void PartitionDatabase(string newDatabaseName, IEnumerable<string> connectionStrings)
+        {
+            var governrateIds = GetGovernerateIds(connectionStrings);
+        }
+
+        private static List<string> GetGovernerateIds(IEnumerable<string> connectionStrings)
+        {
+            var governrateIds = new List<string>();
+
+            foreach (var connectionString in connectionStrings)
+            {
+                using (var connection = new SqlConnection(connectionString))
+                {
+                    if (connection.State == ConnectionState.Closed) connection.Open();
+
+                    var retriveGovernratedIdCommand = connection.CreateCommand();
+
+                    string commandText = "SELECT [PARAM_VALUE] FROM [{0}].[dbo].[AUDIT_SETTINGS] where [PARAM_NAME] = 'SITE_ID'";
+
+                    commandText = string.Format(commandText, connection.Database);
+
+                    retriveGovernratedIdCommand.CommandText = commandText;
+
+                    object governrateId = retriveGovernratedIdCommand.ExecuteScalar();
+
+                    if (governrateId == null)
+                        throw new Exception(string.Format("{0} doesn't have valid governerate Id", connection.Database));
+
+                    governrateIds.Add(governrateId.ToString());
+                }
+            }
+
+            return governrateIds;
         }
 
         private void TaskContinuation(Task continueTask)

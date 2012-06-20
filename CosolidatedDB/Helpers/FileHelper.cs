@@ -17,14 +17,18 @@ namespace CosolidatedDB.Helpers
 
         public static IEnumerable<string> LoadItemsLines(StreamReader streamReader)
         {
-            string line = "";
+            string line;
+            
+            var connectionStrings = new List<string>();
 
             while ((line = streamReader.ReadLine()) != null)
             {
                 if(line.Trim().Length == 0) continue;
 
-                yield return line;
+                connectionStrings.Add(line);
             }
+
+            return connectionStrings;
         }
     }
 }
